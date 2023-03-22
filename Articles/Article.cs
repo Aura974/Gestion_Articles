@@ -24,9 +24,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            string displayArticle = "";
-
-            return displayArticle;
+            return "Article : " + ArticleName + "\n" + "Référence : " + Reference + "\n" + "Prix : " + SellingPrice;
         }
     }
 }

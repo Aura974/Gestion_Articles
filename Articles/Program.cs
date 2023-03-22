@@ -9,7 +9,7 @@
 
         public static void Main(string[] args)
         {
-            List<Article> articles = Supermarket.Articles;
+            Supermarket.Articles = new List<Article>();
             Article beer = new Article();
             Article wine = new Article();
             Article rum = new Article();
@@ -18,25 +18,25 @@
             beer.ArticleName = "Dodo";
             beer.Reference = 1;
             beer.SellingPrice = 1.5m;
-            articles.Add(beer);
+            Supermarket.Articles.Add(beer);
 
             wine.ArticleName = "Mouton Cadet 2019";
             wine.Reference = 2;
             wine.SellingPrice = 16.95m;
-            articles.Add(wine);
+            Supermarket.Articles.Add(wine);
 
             rum.ArticleName = "Charrette";
             rum.Reference = 3;
             rum.SellingPrice = 10.95m;
-            articles.Add(rum);
+            Supermarket.Articles.Add(rum);
 
             gin.ArticleName = "Tanqueray";
             gin.Reference = 4;
             gin.SellingPrice = 26.9m;
-            articles.Add(gin);
+            Supermarket.Articles.Add(gin);
 
 
-            int choice = 0;
+            int choice = -1;
 
             while (choice != 0)
             {
@@ -51,13 +51,15 @@
                 Console.WriteLine("(5) Rechercher un article par nom");
                 Console.WriteLine("(6) Rechercher un article par prix de vente");
                 Console.WriteLine("(7) Afficher tous les articles");
-                Console.WriteLine("(8) Quitter\n");
+                Console.WriteLine("(0) Quitter\n");
                 Console.Write("Choix : ");
                 choice = Int32.Parse(Console.ReadLine());
+                Console.Clear();
 
                 switch (choice)
                 {
                     case 1:
+                        
                         FindArticle();
                         break;
                     case 2:
@@ -66,7 +68,7 @@
                     case 3:
                         Supermarket.DeleteArticle();
                         break;
-                    case 4:
+                    /*case 4:
                         Supermarket.UpdateArticle();
                         break;
                     case 5:
@@ -79,26 +81,33 @@
                         Supermarket.DisplayArticle();
                         break;
                     case 8:
-                        break;
+                        break;*/
                     default:
                         break;
                 }
             }
         }
-        public Article FindArticle()
+
+        public static void FindArticle()
         {
+            Console.WriteLine("------------------------------"); 
             Console.Write("Entrez une référence : ");
-            Console.WriteLine("--------------------")
+            
             try
             {
                 int reference = Int32.Parse(Console.ReadLine());
-                foreach (var article in Supermarket.Articles)
-                {
-                    if (Supermarket.IsArticleInCatalogue(reference))
-                    {
-                        Console.WriteLine($)
-                    }
-                }
+
+                Console.WriteLine(Supermarket.IsArticleInCatalogue(reference));
+                Console.WriteLine("------------------------------\n");
+                Console.Write("Appuyez sur une touche pour revenir au menu");
+                Console.ReadLine();
+
+            }
+            catch (FormatException)
+            {
+                Console.Write("Veuillez entrer un nombre !");
+                Console.WriteLine("------------------------------\n");
+                Console.ReadLine();
             }
         }
 

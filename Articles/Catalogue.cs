@@ -20,16 +20,15 @@
 
         }
 
-        public bool IsArticleInCatalogue(int reference)
+        public string IsArticleInCatalogue(int reference)
         {
-            foreach (var article in Articles)
+            var foundArticle = this.Articles.Find(x => x.Reference == reference);
+            
+            if (foundArticle == null)
             {
-                if (article.Reference == reference)
-                {
-                    return true;
-                }
+                return "Article non référencé";
             }
-            return false;
+            return foundArticle.ToString();
         }
 
         public void DeleteArticle()
