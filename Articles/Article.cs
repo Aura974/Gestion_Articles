@@ -19,6 +19,17 @@
         public decimal SellingPrice { get; set; }
 
         /// <summary>
+        /// Number of the same articles to create (default to 1)
+        /// </summary>
+        public int NoOfITems { get; set; }
+
+        // Constructor
+        public Article()
+        {
+            NoOfITems = 1;
+        }
+
+        /// <summary>
         /// Overridden ToString() method to display an article
         /// </summary>
         /// <returns></returns>

@@ -9,31 +9,36 @@
         /// List of all articles 
         /// </summary>
         public List<Article> Articles { get; set; }
+        public int TotalStock { get; set; }
 
-        public void AddArticle()
+        public void AddArticle(Article article)
+        {
+            this.Articles.Add(article);
+            this.TotalStock += article.NoOfITems;
+        }
+
+        public void UpdateArticle()
         {
 
         }
+        public bool IsReferenceInCatalogue(int reference)
+        {
+            bool foundReference = Articles.Any(x => x.Reference == reference);
 
-        public void UpdateArticle() 
-        { 
-
+            return foundReference;
         }
 
-        public string IsArticleInCatalogue(int reference)
+        public bool IsArticleNameInCatalogue(string articleName)
         {
-            var foundArticle = this.Articles.Find(x => x.Reference == reference);
-            
-            if (foundArticle == null)
-            {
-                return "Article non référencé";
-            }
-            return foundArticle.ToString();
+            bool foundArticleName = Articles.Any(x => x.ArticleName.ToLower() == articleName);
+
+            return foundArticleName;
         }
 
         public void DeleteArticle()
         {
 
         }
+
     }
 }
