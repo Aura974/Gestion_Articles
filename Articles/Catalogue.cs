@@ -18,15 +18,17 @@
         public void AddArticle(Article article)
         {
             this.Articles.Add(article);
-            this.TotalStock += article.NoOfITems;
+            this.TotalStock += article.NoOfItems;
         }
-
+        
         /// <summary>
-        /// Updates one article from list
+        /// Deletes article from list
         /// </summary>
-        public void UpdateArticle()
+        public void DeleteArticle(Article article)
         {
-
+            this.TotalStock -= article.NoOfItems; 
+            this.Articles.Remove(article);
+            
         }
 
         /// <summary>
@@ -36,7 +38,7 @@
         /// <returns>a boolean</returns>
         public bool IsReferenceInCatalogue(int reference)
         {
-            bool foundReference = Articles.Any(x => x.Reference == reference);
+            bool foundReference = this.Articles.Any(x => x.Reference == reference);
 
             return foundReference;
         }
@@ -48,25 +50,22 @@
         /// <returns>a boolean</returns>
         public bool IsArticleNameInCatalogue(string articleName)
         {
-            bool foundArticleName = Articles.Any(x => x.ArticleName.ToLower() == articleName);
+            bool foundArticleName = this.Articles.Any(x => x.ArticleName.ToLower() == articleName);
 
             return foundArticleName;
         }
 
-        
-
+        /// <summary>
+        /// Returns a unique reference to assign to new article
+        /// </summary>
+        /// <returns>an integer</returns>
         public int AssignReference()
         {
-            int maxReference = Articles.Max(x => x.Reference);
+            int maxReference = this.Articles.Max(x => x.Reference);
             int newReference = maxReference + 1;
 
             return newReference;
         }
-
-        /// <summary>
-        /// Deletes article from list
-        /// </summary>
-
 
     }
 }

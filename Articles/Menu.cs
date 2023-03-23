@@ -38,16 +38,16 @@
                 switch (choice)
                 {
                     case 1:
-
                         FindReference(catalogue);
                         break;
                     case 2:
                         CreateArticle(catalogue);
                         break;
                     case 3:
+                        RemoveArticle(catalogue);
                         break;
                     case 4:
-                        //Supermarket.UpdateArticle();
+                        UpdateArticle(catalogue);
                         break;
                     case 5:
                         FindArticleName(catalogue);
@@ -96,9 +96,9 @@
                 Console.WriteLine("------------------------------\n");
                 Console.Write("Appuyez sur une touche pour revenir au menu");
                 Console.ReadLine();
+
             }
         }
-
         /// <summary>
         /// Searches catalogue for article name and displays article if found
         /// </summary>
@@ -167,7 +167,7 @@
             if(IsNumber(itemsNumber))
             {
                 int noOfItems = Int32.Parse(itemsNumber);
-                newArticle.NoOfITems = noOfItems;
+                newArticle.NoOfItems = noOfItems;
             }
             else
             {
@@ -203,10 +203,6 @@
             Console.WriteLine("Article(s) ajouté(s) avec succès !");
             Console.WriteLine("Retour au menu...");
             Thread.Sleep(3000);
-
-            
-
-
         }
 
         /// <summary>
@@ -273,6 +269,174 @@
             decimal sellingPrice = Decimal.Parse(stringPrice);
 
             return sellingPrice;
+        }
+
+        private void RemoveArticle(Catalogue catalogue)
+        {
+            int reference = IsReference();
+
+            if (catalogue.IsReferenceInCatalogue(reference))
+            {
+                var requiredArticle = catalogue.Articles.Find(x => x.Reference == reference);
+
+                catalogue.DeleteArticle(requiredArticle);
+                Console.Clear();
+                Console.WriteLine("------------------------------");
+                Console.WriteLine("Article supprimé avec succès !");
+                Console.WriteLine("------------------------------");
+                Thread.Sleep(3000);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("------------------------------");
+                Console.WriteLine("Article non trouvé");
+                Console.WriteLine("------------------------------\n");
+                Console.Write("Appuyez sur une touche pour revenir au menu");
+                Console.ReadLine();
+            }
+        }
+
+        private void UpdateArticle(Catalogue catalogue)
+        {
+            int choice = -1;
+            Console.WriteLine("------------------------------");
+            int reference = IsReference();
+            Article oldArticle = new Article();
+
+            if (catalogue.IsReferenceInCatalogue(reference))
+            {
+                oldArticle = catalogue.Articles.Find(x => x.Reference == reference);
+                Console.Clear();
+                Console.WriteLine("------------------------------");
+                Console.WriteLine("  --- MODIFIER UN ARTICLE --- ");
+                Console.WriteLine("------------------------------\n");
+                Console.WriteLine(oldArticle.ToString());
+                Console.WriteLine("------------------------------");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("------------------------------");
+                Console.WriteLine("Article non référencé");
+                Console.WriteLine("------------------------------");
+                Console.WriteLine("Retour au menu...");
+                Thread.Sleep(3000);
+            }
+
+
+            while (choice != 0)
+            {
+                Console.WriteLine("\n Que souhaitez-vous modifier ?\n");
+                Console.WriteLine("(1) Nom de l'article");
+                Console.WriteLine("(2) Référence");
+                Console.WriteLine("(3) Prix");
+                Console.WriteLine("(4) Nombre d'articles");
+                Console.WriteLine("(0) Retour au menu principal");
+                Console.Write("\nChoix : ");
+                try
+                {
+                    choice = Int32.Parse(Console.ReadLine());
+                }
+                catch (FormatException)
+                {
+                    choice = -1;
+                }
+
+                switch (choice)
+                {
+                    case 1:
+                        // Getting name
+                        Console.Write("\nNom de l'article : ");
+                        string newArticleName = Console.ReadLine();
+                        while (string.IsNullOrEmpty(newArticleName))
+                        {
+                            Console.Write("Veuillez entrer un nom d'article : ");
+                            newArticleName = Console.ReadLine();
+                        }
+                        oldArticle.ArticleName = newArticleName;
+                        DisplaySuccess(oldArticle, "nom");
+                        choice = 0;
+                        break;
+
+                    case 2:
+                        // Getting unique reference
+                        Console.WriteLine();
+                        int newReference = IsReference();
+                        if (catalogue.IsReferenceInCatalogue(newReference))
+                        {
+                            Console.WriteLine("\nLa référence existe déjà.");
+                            Console.WriteLine("------------------------------\n");
+                        }
+                        else
+                        {
+                            oldArticle.Reference = newReference;
+                            DisplaySuccess(oldArticle, "référence");
+                            choice = 0;
+                        }
+                        break;
+
+                    case 3:
+                        // Getting selling price
+                        decimal newSellingPrice = IsSellingPrice();
+                        oldArticle.SellingPrice = newSellingPrice;
+                        DisplaySuccess(oldArticle, "prix");
+                        choice = 0;
+                        break;
+
+                    case 4:
+                        // Getting number of items (defaults to 1)
+                        Console.Write("\nNombre d'articles : ");
+                        string newItemsNumber = Console.ReadLine();
+                        if (IsNumber(newItemsNumber))
+                        {
+                            int noOfItems = Int32.Parse(newItemsNumber);
+                            catalogue.TotalStock -= oldArticle.NoOfItems;
+                            oldArticle.NoOfItems = noOfItems;
+                            catalogue.TotalStock += oldArticle.NoOfItems;
+
+                            DisplaySuccess(oldArticle, "nombre d'articles");
+                            choice = 0;
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n------------------------------");
+                            Console.WriteLine("Nombre d'articles incorrect.");
+                            Console.WriteLine("------------------------------\n");
+                            Thread.Sleep(2000);
+                            choice = 0;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+
+            }
+        }
+
+        /// <summary>
+        /// Displays the successful message of update of an article
+        /// </summary>
+        /// <param name="article">the object of type Article to display</param>
+        /// <param name="field">the string field that was modified</param>
+        public void DisplaySuccess(Article article, string field)
+        {
+            Console.Clear();
+            if (field == "référence")
+            {
+                Console.WriteLine($"\nLa {field} a été modifiée avec succès !");
+            }
+            else
+            {
+                Console.WriteLine($"\nLe {field} a été modifié avec succès !");
+            }
+            Console.WriteLine("Nouvel article : ");
+            Console.WriteLine("\n------------------------------");
+            Console.WriteLine(article.ToString());
+            Console.WriteLine("------------------------------\n");
+            Console.WriteLine("Retour au menu...");
+            Thread.Sleep(3000);
         }
     }
 }

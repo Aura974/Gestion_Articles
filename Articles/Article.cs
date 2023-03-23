@@ -21,12 +21,12 @@
         /// <summary>
         /// Number of the same articles to create (default to 1)
         /// </summary>
-        public int NoOfITems { get; set; }
+        public int NoOfItems { get; set; }
 
         // Constructor
         public Article()
         {
-            NoOfITems = 1;
+            NoOfItems = 1;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            return "Article : " + ArticleName + "\n" + "Référence : " + Reference + "\n" + "Prix : " + SellingPrice;
+            return "Article : " + ArticleName + "\nRéférence : " + Reference + "\nPrix : " + SellingPrice + "\nNombre d'articles : " + NoOfItems;
         }
     }
 }
