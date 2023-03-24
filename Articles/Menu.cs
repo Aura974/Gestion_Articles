@@ -56,9 +56,7 @@
                         FindArticlesPriceRange(catalogue);
                         break;
                     case 7:
-                        //Supermarket.DisplayArticle();
-                        break;
-                    case 8:
+                        DisplayAllArticles(catalogue);
                         break;
                     default:
                         break;
@@ -480,6 +478,21 @@
             }
 
             
+        }
+
+        public void DisplayAllArticles(Catalogue catalogue)
+        {
+            Console.WriteLine("------------------------------");
+            Console.WriteLine("    ---LISTE D'ARTICLES---    ");
+            Console.WriteLine("------------------------------\n");
+
+            foreach (Article article in catalogue.Articles)
+            {
+                Console.WriteLine(article.ToString());
+                Console.WriteLine("------------------------------\n");
+            }
+            Console.Write("Appuyez sur une touche pour revenir au menu");
+            Console.ReadLine();
         }
     }
 }
