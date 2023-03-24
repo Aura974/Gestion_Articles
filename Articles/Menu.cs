@@ -53,7 +53,7 @@
                         FindArticleName(catalogue);
                         break;
                     case 6:
-                        //Supermarket.FindArticle();
+                        FindArticlesPriceRange(catalogue);
                         break;
                     case 7:
                         //Supermarket.DisplayArticle();
@@ -80,10 +80,10 @@
 
             if (catalogue.IsReferenceInCatalogue(reference))
             {
-                var requiredArticle = catalogue.Articles.Find(x => x.Reference == reference);
+                var requestedArticle = catalogue.Articles.Find(x => x.Reference == reference);
                 Console.Clear();
                 Console.WriteLine("------------------------------");
-                Console.WriteLine(requiredArticle.ToString());
+                Console.WriteLine(requestedArticle.ToString());
                 Console.WriteLine("------------------------------");
                 Console.Write("Appuyez sur une touche pour revenir au menu");
                 Console.ReadLine();
@@ -113,10 +113,10 @@
 
             if (catalogue.IsArticleNameInCatalogue(articleName))
             {
-                var requiredArticle = catalogue.Articles.Find(x => x.ArticleName.ToLower() == articleName);
+                var requestedArticle = catalogue.Articles.Find(x => x.ArticleName.ToLower() == articleName);
                 Console.Clear();
                 Console.WriteLine("------------------------------");
-                Console.WriteLine(requiredArticle.ToString());
+                Console.WriteLine(requestedArticle.ToString());
                 Console.WriteLine("------------------------------");
                 Console.Write("Appuyez sur une touche pour revenir au menu");
                 Console.ReadLine();
@@ -159,7 +159,7 @@
 
             // Getting selling price
             Console.WriteLine("");
-            decimal sellingPrice = IsSellingPrice();
+            decimal sellingPrice = IsSellingPrice("Prix de l'article");
 
             // Getting number of items (defaults to 1)
             Console.Write("\nNombre d'articles : ");
@@ -254,16 +254,16 @@
         /// Checks if selling price is a correct number
         /// </summary>
         /// <returns>a decimal</returns>
-        private decimal IsSellingPrice()
+        private decimal IsSellingPrice(string field)
         {
-            Console.Write("Prix de l'article : ");
+            Console.Write($"{field} : ");
 
             string stringPrice = Console.ReadLine();
 
             while (!IsDecimal(stringPrice))
             {
                 Console.WriteLine("Veuillez entre un nombre !\n");
-                Console.Write("Prix de l'article : ");
+                Console.Write($"{field} : ");
                 stringPrice = Console.ReadLine();
             }
             decimal sellingPrice = Decimal.Parse(stringPrice);
@@ -271,15 +271,21 @@
             return sellingPrice;
         }
 
+        /// <summary>
+        /// Checks if article exists 
+        /// then calls on the delete method 
+        /// to remove it from catalogue and stock
+        /// </summary>
+        /// <param name="catalogue"></param>
         private void RemoveArticle(Catalogue catalogue)
         {
             int reference = IsReference();
 
             if (catalogue.IsReferenceInCatalogue(reference))
             {
-                var requiredArticle = catalogue.Articles.Find(x => x.Reference == reference);
+                var requestedArticle = catalogue.Articles.Find(x => x.Reference == reference);
 
-                catalogue.DeleteArticle(requiredArticle);
+                catalogue.DeleteArticle(requestedArticle);
                 Console.Clear();
                 Console.WriteLine("------------------------------");
                 Console.WriteLine("Article supprimé avec succès !");
@@ -297,6 +303,10 @@
             }
         }
 
+        /// <summary>
+        /// Updates one property of an article found by reference
+        /// </summary>
+        /// <param name="catalogue"></param>
         private void UpdateArticle(Catalogue catalogue)
         {
             int choice = -1;
@@ -378,7 +388,7 @@
 
                     case 3:
                         // Getting selling price
-                        decimal newSellingPrice = IsSellingPrice();
+                        decimal newSellingPrice = IsSellingPrice("Nouveau prix");
                         oldArticle.SellingPrice = newSellingPrice;
                         DisplaySuccess(oldArticle, "prix");
                         choice = 0;
@@ -437,6 +447,39 @@
             Console.WriteLine("------------------------------\n");
             Console.WriteLine("Retour au menu...");
             Thread.Sleep(3000);
+        }
+
+        /// <summary>
+        /// Finds and displays all articles within a price range
+        /// </summary>
+        /// <param name="catalogue"></param>
+        public void FindArticlesPriceRange(Catalogue catalogue)
+        {
+            Console.WriteLine("------------------------------");
+            Console.WriteLine(" --AFFICHER LISTE D'ARTICLES--");
+            Console.WriteLine("------------------------------\n");
+
+            Console.WriteLine("Afficher les articles compris entre...\n");
+            decimal priceMin = IsSellingPrice("Prix mini");
+            Console.WriteLine("\n... et\n");
+            decimal priceMax = IsSellingPrice("Prix maxi");
+            Console.WriteLine("------------------------------\n");
+
+
+            List<Article> articles = catalogue.ListArticlesPriceRange(priceMin, priceMax);
+
+            if (articles.Count > 0)
+            {
+                foreach (Article article in articles)
+                {
+                    Console.WriteLine(article.ToString());
+                    Console.WriteLine("------------------------------\n");
+                }
+                Console.Write("Appuyez sur une touche pour revenir au menu");
+                Console.ReadLine();
+            }
+
+            
         }
     }
 }

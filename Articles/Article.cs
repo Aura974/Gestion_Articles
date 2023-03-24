@@ -35,7 +35,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            return "Article : " + ArticleName + "\nRéférence : " + Reference + "\nPrix : " + SellingPrice + "\nNombre d'articles : " + NoOfItems;
+            return "Article : " + ArticleName + "\nRéférence : " + Reference + "\nPrix : " + SellingPrice + " €" + "\nNombre d'articles : " + NoOfItems;
         }
     }
 }

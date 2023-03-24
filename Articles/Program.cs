@@ -13,6 +13,10 @@
 
         public static void Main(string[] args)
         {
+            // Encoding so the console show the currency symbol
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+
+            // Creating new articles and adding them to catalogue
             Supermarket.Articles = new List<Article>();
             Article beer = new Article();
             Article wine = new Article();
@@ -39,6 +43,7 @@
             gin.SellingPrice = 26.9m;
             Supermarket.Articles.Add(gin);
 
+            // Starting the catalogue menu
             Menu.Start(Supermarket);
 
         }

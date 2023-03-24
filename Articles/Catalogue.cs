@@ -22,7 +22,7 @@
         }
         
         /// <summary>
-        /// Deletes article from list
+        /// Deletes article from list and stock
         /// </summary>
         public void DeleteArticle(Article article)
         {
@@ -53,6 +53,27 @@
             bool foundArticleName = this.Articles.Any(x => x.ArticleName.ToLower() == articleName);
 
             return foundArticleName;
+        }
+
+        /// <summary>
+        /// Finds all articles within a price range
+        /// </summary>
+        /// <param name="priceMin">minimum price</param>
+        /// <param name="priceMax">maximum price</param>
+        /// <returns>a list of articles</returns>
+        public List<Article> ListArticlesPriceRange(decimal priceMin, decimal priceMax) 
+        {
+            List<Article> articles = new List<Article>();
+
+            foreach (Article article in this.Articles)
+            {
+                if (article.SellingPrice <= priceMax && article.SellingPrice >= priceMin)
+                {
+                    articles.Add(article);
+                }
+            }
+
+            return articles;
         }
 
         /// <summary>
