@@ -13,7 +13,7 @@
 
         public static void Main(string[] args)
         {
-            // Encoding so the console show the currency symbol
+            // Encoding so the console shows the currency symbol
             Console.OutputEncoding = System.Text.Encoding.Unicode;
 
             // Creating new articles and adding them to catalogue

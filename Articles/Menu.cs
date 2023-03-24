@@ -16,13 +16,10 @@
                 Console.WriteLine("------------------------------");
                 Console.WriteLine("      --- BIENVENUE ---       ");
                 Console.WriteLine("------------------------------\n");
-                Console.WriteLine("(1) Rechercher un article par référence");
+                Console.WriteLine("(1) Rechercher un article");
                 Console.WriteLine("(2) Ajouter un article au stock");
                 Console.WriteLine("(3) Supprimer un article par référence");
                 Console.WriteLine("(4) Modifier un article par référence");
-                Console.WriteLine("(5) Rechercher un article par nom");
-                Console.WriteLine("(6) Rechercher un article par prix de vente");
-                Console.WriteLine("(7) Afficher tous les articles");
                 Console.WriteLine("(0) Quitter\n");
                 Console.Write("Choix : ");
                 try
@@ -38,7 +35,7 @@
                 switch (choice)
                 {
                     case 1:
-                        FindReference(catalogue);
+                        SearchMenu(catalogue);
                         break;
                     case 2:
                         CreateArticle(catalogue);
@@ -49,15 +46,63 @@
                     case 4:
                         UpdateArticle(catalogue);
                         break;
-                    case 5:
+                    default:
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Submenu for the searching methods and display
+        /// </summary>
+        /// <param name="catalogue"></param>
+        private void SearchMenu(Catalogue catalogue)
+        {
+            int choice = -1;
+
+            while (choice != 0)
+            {
+                Console.Clear();
+                Console.WriteLine("------------------------------");
+                Console.WriteLine("    --- MENU RECHERCHE ---    ");
+                Console.WriteLine("------------------------------\n");
+                Console.WriteLine("(1) Rechercher par référence");
+                Console.WriteLine("(2) Rechercher par nom");
+                Console.WriteLine("(3) Rechercher par prix de vente");
+                Console.WriteLine("(4) Afficher tous les articles");
+                Console.WriteLine("(0) Retour au menu principal");
+                Console.Write("\nChoix : ");
+                try
+                {
+                    choice = Int32.Parse(Console.ReadLine());
+                }
+                catch (FormatException)
+                {
+                    choice = -1;
+                }
+
+                switch (choice)
+                {
+                    case 1:
+                        FindReference(catalogue);
+                        choice = 0;
+                        break;
+
+                    case 2:
                         FindArticleName(catalogue);
+                        choice = 0;
                         break;
-                    case 6:
+
+                    case 3:
                         FindArticlesPriceRange(catalogue);
+                        choice = 0;
                         break;
-                    case 7:
+
+                    case 4:
                         DisplayAllArticles(catalogue);
+                        choice = 0;
                         break;
+
                     default:
                         break;
                 }
@@ -70,6 +115,7 @@
         /// <param name="catalogue"></param>
         private void FindReference(Catalogue catalogue)
         {
+            Console.Clear();
             Console.WriteLine("------------------------------");
             Console.WriteLine("       ---RECHERCHE---        ");
             Console.WriteLine("------------------------------\n");
@@ -103,6 +149,7 @@
         /// <param name="catalogue"></param>
         private void FindArticleName(Catalogue catalogue)
         {
+            Console.Clear();
             Console.WriteLine("------------------------------");
             Console.WriteLine("       ---RECHERCHE---        ");
             Console.WriteLine("------------------------------");
@@ -131,10 +178,75 @@
         }
 
         /// <summary>
+        /// Finds and displays all articles within a price range
+        /// </summary>
+        /// <param name="catalogue"></param>
+        public void FindArticlesPriceRange(Catalogue catalogue)
+        {
+            Console.Clear();
+            Console.WriteLine("------------------------------");
+            Console.WriteLine(" --AFFICHER LISTE D'ARTICLES--");
+            Console.WriteLine("------------------------------\n");
+
+            Console.WriteLine("Afficher les articles compris entre...\n");
+            decimal priceMin = IsSellingPrice("Prix mini");
+            Console.WriteLine("\n... et\n");
+            decimal priceMax = IsSellingPrice("Prix maxi");
+            Console.WriteLine("------------------------------\n");
+
+
+            List<Article> articles = catalogue.ListArticlesPriceRange(priceMin, priceMax);
+
+            if (articles.Count > 0)
+            {
+                Console.Clear();
+                foreach (Article article in articles)
+                {
+                    Console.WriteLine(article.ToString());
+                    Console.WriteLine("------------------------------\n");
+                }
+                Console.Write("Appuyez sur une touche pour revenir au menu");
+                Console.ReadLine();
+            }
+
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("------------------------------");
+                Console.WriteLine("Aucun article trouvé");
+                Console.WriteLine("------------------------------\n");
+                Console.WriteLine("Retour au menu...");
+                Thread.Sleep(3000);
+            }
+
+
+        }
+
+        /// <summary>
+        /// Displays every existing articles
+        /// </summary>
+        /// <param name="catalogue"></param>
+        public void DisplayAllArticles(Catalogue catalogue)
+        {
+            Console.Clear();
+            Console.WriteLine("------------------------------");
+            Console.WriteLine("    ---LISTE D'ARTICLES---    ");
+            Console.WriteLine("------------------------------\n");
+
+            foreach (Article article in catalogue.Articles)
+            {
+                Console.WriteLine(article.ToString());
+                Console.WriteLine("------------------------------\n");
+            }
+            Console.Write("Appuyez sur une touche pour revenir au menu");
+            Console.ReadLine();
+        }
+
+        /// <summary>
         /// Creates a new article and adds it to the stock
         /// </summary>
         /// <param name="catalogue"></param>
-        private void CreateArticle(Catalogue catalogue) 
+        private void CreateArticle(Catalogue catalogue)
         {
             Console.WriteLine("------------------------------");
             Console.WriteLine("   ---AJOUTER UN ARTICLE---   ");
@@ -162,14 +274,14 @@
             // Getting number of items (defaults to 1)
             Console.Write("\nNombre d'articles : ");
             string itemsNumber = Console.ReadLine();
-            if(IsNumber(itemsNumber))
+            if (IsNumber(itemsNumber))
             {
                 int noOfItems = Int32.Parse(itemsNumber);
                 newArticle.NoOfItems = noOfItems;
             }
             else
             {
-                Console.WriteLine("\n------------------------------"); 
+                Console.WriteLine("\n------------------------------");
                 Console.WriteLine("Nombre d'articles incorrect.");
                 Console.WriteLine("Un seul article a été ajouté.\n");
                 Thread.Sleep(2000);
@@ -192,7 +304,7 @@
             {
                 newArticle.Reference = reference;
             }
-            
+
             newArticle.SellingPrice = sellingPrice;
 
             // Adding to catalogue and stock
@@ -445,54 +557,6 @@
             Console.WriteLine("------------------------------\n");
             Console.WriteLine("Retour au menu...");
             Thread.Sleep(3000);
-        }
-
-        /// <summary>
-        /// Finds and displays all articles within a price range
-        /// </summary>
-        /// <param name="catalogue"></param>
-        public void FindArticlesPriceRange(Catalogue catalogue)
-        {
-            Console.WriteLine("------------------------------");
-            Console.WriteLine(" --AFFICHER LISTE D'ARTICLES--");
-            Console.WriteLine("------------------------------\n");
-
-            Console.WriteLine("Afficher les articles compris entre...\n");
-            decimal priceMin = IsSellingPrice("Prix mini");
-            Console.WriteLine("\n... et\n");
-            decimal priceMax = IsSellingPrice("Prix maxi");
-            Console.WriteLine("------------------------------\n");
-
-
-            List<Article> articles = catalogue.ListArticlesPriceRange(priceMin, priceMax);
-
-            if (articles.Count > 0)
-            {
-                foreach (Article article in articles)
-                {
-                    Console.WriteLine(article.ToString());
-                    Console.WriteLine("------------------------------\n");
-                }
-                Console.Write("Appuyez sur une touche pour revenir au menu");
-                Console.ReadLine();
-            }
-
-            
-        }
-
-        public void DisplayAllArticles(Catalogue catalogue)
-        {
-            Console.WriteLine("------------------------------");
-            Console.WriteLine("    ---LISTE D'ARTICLES---    ");
-            Console.WriteLine("------------------------------\n");
-
-            foreach (Article article in catalogue.Articles)
-            {
-                Console.WriteLine(article.ToString());
-                Console.WriteLine("------------------------------\n");
-            }
-            Console.Write("Appuyez sur une touche pour revenir au menu");
-            Console.ReadLine();
         }
     }
 }
